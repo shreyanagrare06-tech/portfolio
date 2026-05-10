@@ -1,50 +1,34 @@
-const links = document.querySelectorAll("nav a");
-
-links.forEach(link => {
-
-  link.addEventListener("click", function(e) {
-
-    e.preventDefault();
-
-    const targetId = this.getAttribute("href");
-
-    const targetSection = document.querySelector(targetId);
-
-    targetSection.scrollIntoView({
-      behavior: "smooth"
-    });
-
-  });
-
-});
-// Contact Form Success Popup
-
-const form = document.getElementById("contact-form");
-
-form.addEventListener("submit", function(event) {
+document.getElementById("contact-form")
+.addEventListener("submit", function(event) {
 
   event.preventDefault();
 
-  // Create popup
+  emailjs.sendForm(
+    "service_hlqsotw",
+    "template_4cjtp4v",
+    this
+  )
+  .then(function() {
 
-  const popup = document.createElement("div");
+    emailjs.send(
+      "service_hlqsotw",
+      "template_oi8mvbs",
+      {
+        user_name: document.querySelector('[name="user_name"]').value,
+        user_email: document.querySelector('[name="user_email"]').value
+      }
+    );
 
-  popup.innerText = "✅ Message sent successfully!";
+    alert("Message sent successfully!");
 
-  popup.classList.add("success-popup");
+    document.getElementById("contact-form").reset();
 
-  document.body.appendChild(popup);
+  }, function(error) {
 
-  // Remove popup after 3 seconds
+    alert("Failed to send message");
 
-  setTimeout(() => {
+    console.log(error);
 
-    popup.remove();
-
-  }, 3000);
-
-  // Reset form
-
-  form.reset();
+  });
 
 });
